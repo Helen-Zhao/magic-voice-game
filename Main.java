@@ -45,8 +45,8 @@ import javax.swing.SwingWorker;
 import javax.swing.UIManager;
 import java.awt.CardLayout;
 
-//SE206 Assignment 2
-//Author: Helen Zhao || UID:6913580 || UPI:hzha587
+//Magic Voice Game
+//Author: Helen Zhao 
 public class Main {
 	private String liUsr = ""; //liUsr -> logged in username
 	private boolean loggedIn = false;
