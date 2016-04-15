@@ -33,7 +33,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.awt.event.ActionEvent;
 import java.awt.GridBagLayout;
-import java.awt.GridLayout;
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
 import javax.swing.JTabbedPane;
@@ -47,17 +46,17 @@ import java.awt.CardLayout;
 
 //Magic Voice Game
 //Author: Helen Zhao 
-public class Main {
+public class MagicVoiceGame {
 	private String liUsr = ""; //liUsr -> logged in username
 	private boolean loggedIn = false;
 	private JFrame frame;
-	private JTextField textField;
-	private JTextField textField_1;
+	private JTextField username;
+	private JTextField newUsernameField;
 	private JTabbedPane tabbedPane;
 	private String fileName = ".usernames.txt";
 	JTable statsTab;
-	private HashMap<String, String> hm = new HashMap<String, String>();
-	//hm stores the PIDs of processes hashed to username
+	private HashMap<String, String> PIDHashMap = new HashMap<String, String>();
+	//PIDHashMap stores the PIDs of processes hashed to username
 
 	/**
 	 * Launch the application.
@@ -66,7 +65,7 @@ public class Main {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					Main window = new Main();
+					MagicVoiceGame window = new MagicVoiceGame();
 					window.frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -78,7 +77,7 @@ public class Main {
 	/**
 	 * Create the application.
 	 */
-	public Main() {
+	public MagicVoiceGame() {
 		BackgroundTask bt = new BackgroundTask();
 		bt.execute();
 		//bt simply runs the initial greeting message
@@ -201,19 +200,19 @@ public class Main {
 		gridBagLayout.rowWeights = new double[] { 0.0, 1.0, 1.0, Double.MIN_VALUE };
 		frame.getContentPane().setLayout(gridBagLayout);
 
-		JPanel mainScreen = new JPanel();
-		GridBagConstraints gbc_mainScreen = new GridBagConstraints();
-		gbc_mainScreen.insets = new Insets(0, 0, 5, 0);
-		gbc_mainScreen.fill = GridBagConstraints.BOTH;
-		gbc_mainScreen.gridx = 0;
-		gbc_mainScreen.gridy = 0;
-		frame.getContentPane().add(mainScreen, gbc_mainScreen);
-		GridBagLayout gbl_mainScreen = new GridBagLayout();
-		gbl_mainScreen.columnWidths = new int[] { 404, 0, 0 };
-		gbl_mainScreen.rowHeights = new int[] { 24, 0, 0 };
-		gbl_mainScreen.columnWeights = new double[] { 1.0, 0.0, Double.MIN_VALUE };
-		gbl_mainScreen.rowWeights = new double[] { 0.0, 1.0, Double.MIN_VALUE };
-		mainScreen.setLayout(gbl_mainScreen);
+		JPanel MagicVoiceGameScreen = new JPanel();
+		GridBagConstraints gbc_MagicVoiceGameScreen = new GridBagConstraints();
+		gbc_MagicVoiceGameScreen.insets = new Insets(0, 0, 5, 0);
+		gbc_MagicVoiceGameScreen.fill = GridBagConstraints.BOTH;
+		gbc_MagicVoiceGameScreen.gridx = 0;
+		gbc_MagicVoiceGameScreen.gridy = 0;
+		frame.getContentPane().add(MagicVoiceGameScreen, gbc_MagicVoiceGameScreen);
+		GridBagLayout gbl_MagicVoiceGameScreen = new GridBagLayout();
+		gbl_MagicVoiceGameScreen.columnWidths = new int[] { 404, 0, 0 };
+		gbl_MagicVoiceGameScreen.rowHeights = new int[] { 24, 0, 0 };
+		gbl_MagicVoiceGameScreen.columnWeights = new double[] { 1.0, 0.0, Double.MIN_VALUE };
+		gbl_MagicVoiceGameScreen.rowWeights = new double[] { 0.0, 1.0, Double.MIN_VALUE };
+		MagicVoiceGameScreen.setLayout(gbl_MagicVoiceGameScreen);
 
 		JLabel label = new JLabel("Welcome to the Magic Voice Game!");
 		label.setFont(new Font("Dialog", Font.BOLD, 20));
@@ -223,7 +222,7 @@ public class Main {
 		gbc_label.insets = new Insets(0, 0, 5, 0);
 		gbc_label.gridx = 0;
 		gbc_label.gridy = 0;
-		mainScreen.add(label, gbc_label);
+		MagicVoiceGameScreen.add(label, gbc_label);
 
 		// --------------------------------------------------Bottom Pane------------------------------------------
 
@@ -253,7 +252,7 @@ public class Main {
 		gbc_tabbedPane.gridx = 0;
 		gbc_tabbedPane.gridy = 1;
 
-		mainScreen.add(tabbedPane, gbc_tabbedPane);
+		MagicVoiceGameScreen.add(tabbedPane, gbc_tabbedPane);
 
 		// --------------------------------------------Login---------------------------------------------------------------------
 
@@ -274,17 +273,17 @@ public class Main {
 		lblLoginUser.setBounds(12, 37, 89, 15);
 		login1.add(lblLoginUser);
 
-		textField = new JTextField();
-		textField.setBounds(107, 36, 321, 19);
-		login1.add(textField);
-		textField.setColumns(10);
+		username = new JTextField();
+		username.setBounds(107, 36, 321, 19);
+		login1.add(username);
+		username.setColumns(10);
 
 		JButton btnRegister1 = new JButton("Register this name");
 		btnRegister1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				appendUsername(textField.getText());
-				createStatsFile(textField.getText());
-				liUsr = textField.getText();
+				appendUsername(username.getText());
+				createStatsFile(username.getText());
+				liUsr = username.getText();
 				loggedIn = true;
 				tabbedPane.setSelectedIndex(tabbedPane.indexOfTab("Play"));
 				lblTodo.setText("Welcome " + liUsr + ", let's play!");
@@ -308,12 +307,12 @@ public class Main {
 		JButton btnLogIn = new JButton("Log in!");
 		btnLogIn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				String name = textField.getText();
+				String name = username.getText();
 				if (name.equals("") || !isAlpha(name)) {
 					lblTodo.setText("Sorry, this username is invalid.");
 					lblTodo2.setText(" ");
-				} else if (checkUsername(textField.getText())) {
-					liUsr = textField.getText();
+				} else if (checkUsername(username.getText())) {
+					liUsr = username.getText();
 					loggedIn = true;
 					tabbedPane.setSelectedIndex(tabbedPane.indexOfTab("Play"));
 					lblTodo.setText("Welcome " + liUsr + ", let's play!");
@@ -373,10 +372,10 @@ public class Main {
 		lblUsername.setBounds(12, 35, 95, 15);
 		registerTab.add(lblUsername);
 
-		textField_1 = new JTextField();
-		textField_1.setBounds(98, 36, 305, 17);
-		registerTab.add(textField_1);
-		textField_1.setColumns(10);
+		newUsernameField = new JTextField();
+		newUsernameField.setBounds(98, 36, 305, 17);
+		registerTab.add(newUsernameField);
+		newUsernameField.setColumns(10);
 
 		JButton btnLogin = new JButton("Login");
 		btnLogin.addActionListener(new ActionListener() {
@@ -391,7 +390,7 @@ public class Main {
 		JButton btnRegister = new JButton("Register!");
 		btnRegister.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				String name = textField_1.getText();
+				String name = newUsernameField.getText();
 				if (name.equals("")) {
 					lblTodo.setText("Sorry, this username is invalid.");
 				} else if (!isAlpha(name)) {
@@ -525,7 +524,7 @@ public class Main {
 			public void stateChanged(ChangeEvent e) {
 				// LOGIN
 				if (tabbedPane.getSelectedIndex() == (tabbedPane.indexOfTab("Login"))) {
-					textField.setText("");
+					username.setText("");
 					btnRegister1.setVisible(false);
 					if (loggedIn == true) {
 						login2.setVisible(true);
@@ -553,7 +552,7 @@ public class Main {
 					}
 					// REGISTER
 				} else if (tabbedPane.getSelectedIndex() == tabbedPane.indexOfTab("Register")) {
-					textField_1.setText("");
+					newUsernameField.setText("");
 					lblTodo.setText("Please register a username.");
 					lblTodo2.setText(" ");
 					btnLogin.setVisible(false);
@@ -630,7 +629,7 @@ public class Main {
 		statsTab.getColumn("Stop").setCellEditor(new CustomButton(new JCheckBox()) {
 			@Override
 			protected void doSomething() {
-				String pid = hm.get(statsTab.getValueAt(statsTab.getSelectedRow(), 0).toString());
+				String pid = PIDHashMap.get(statsTab.getValueAt(statsTab.getSelectedRow(), 0).toString());
 				BackgroundTask bt = new BackgroundTask();
 
 				String cmd = "echo `pstree -lp | grep " + pid + " | grep play`";
@@ -741,8 +740,8 @@ public class Main {
 	}
 
 	class BackgroundTask extends SwingWorker {
-		//This class is the SwingWorker class for bash calls nested inside Main() for access
-		//to Main() fields
+		//This class is the SwingWorker class for bash calls nested inside MagicVoiceGame() for access
+		//to MagicVoiceGame() fields
 		protected String bashCall(String input) {
 			//This function executes a bash call
 			//Reference: Nasser's slides
@@ -756,7 +755,7 @@ public class Main {
 					f.setAccessible(true); 
 					int pid;
 					pid = f.getInt(process);
-					hm.put(statsTab.getValueAt(statsTab.getSelectedRow(), 0).toString(), "" + pid);
+					PIDHashMap.put(statsTab.getValueAt(statsTab.getSelectedRow(), 0).toString(), "" + pid);
 				}
 				InputStream stdout = process.getInputStream();
 				InputStream stderr = process.getErrorStream();
